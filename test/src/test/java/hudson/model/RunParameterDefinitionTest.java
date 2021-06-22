@@ -24,6 +24,9 @@
 
 package hudson.model;
 
+import java.io.IOException; // CAP AL
+import java.util.concurrent.ExecutionException; // CAP AL
+
 import hudson.EnvVars;
 import static org.junit.Assert.assertEquals;
 
@@ -113,11 +116,7 @@ public class RunParameterDefinitionTest {
                                                                              project.getName(),
                                                                              "run description",
                                                                              null));
-        paramProject.addProperty(pdp);
-
-        FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
-        assertEquals(Integer.toString(project.getLastBuild().getNumber()),
-                     build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
+        FreeStyleBuild build = getBuild38658(paramProject, pdp, project); // CAP AL
     }
 
     
@@ -145,11 +144,7 @@ public class RunParameterDefinitionTest {
                                                                              project.getName(),
                                                                              "run description",
                                                                              RunParameterFilter.ALL));
-        paramProject.addProperty(pdp);
-
-        FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
-        assertEquals(Integer.toString(project.getLastBuild().getNumber()),
-                     build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
+        FreeStyleBuild build = getBuild38658(paramProject, pdp, project); // CAP AL
     }
 
     @Test
@@ -259,17 +254,22 @@ public class RunParameterDefinitionTest {
                                                                              project.getName(),
                                                                              "run description",
                                                                              RunParameterFilter.ALL));
-        paramProject.addProperty(pdp);
-
-        FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
-        assertEquals(Integer.toString(project.getLastBuild().getNumber()),
-                     build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
+        FreeStyleBuild build = getBuild38658(paramProject, pdp, project); // CAP AL
 
         successfulBuild.delete();
         // We should still be able to retrieve non RunParameter environment variables for the parameterized build
         // even when the selected RunParameter build has been deleted.
         assertEquals("paramProject", build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("JOB_NAME"));
     }
+ // CAP AL
+    private FreeStyleBuild getBuild38658(final FreeStyleProject paramProject, final ParametersDefinitionProperty pdp, final FreeStyleProject project) throws ExecutionException, IOException, InterruptedException { // CAP AL
+        paramProject.addProperty(pdp); // CAP AL
+         // CAP AL
+        FreeStyleBuild build = paramProject.scheduleBuild2(0).get(); // CAP AL
+        assertEquals(Integer.toString(project.getLastBuild().getNumber()), // CAP AL
+                     build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER")); // CAP AL
+        return build; // CAP AL
+    } // CAP AL
 
     static class ResultPublisher extends Publisher {
 
