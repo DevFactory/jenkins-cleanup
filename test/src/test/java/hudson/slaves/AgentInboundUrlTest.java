@@ -23,6 +23,8 @@
  */
 package hudson.slaves;
 
+import hudson.ExtractedSeparateClass74998; // CAP AL
+
 import com.gargoylesoftware.htmlunit.xml.XmlPage;
 import hudson.Util;
 import hudson.model.Computer;
@@ -66,10 +68,7 @@ public class AgentInboundUrlTest {
     @Issue("JENKINS-63222")
     @Test
     public void testInboundAgentUrlOverride() throws Exception {
-        j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
-        MockAuthorizationStrategy authorizationStrategy = new MockAuthorizationStrategy();
-        authorizationStrategy.grant(Jenkins.ADMINISTER).everywhere().toEveryone();
-        j.jenkins.setAuthorizationStrategy(authorizationStrategy);
+        ExtractedSeparateClass74998.extractedMethod43598(j); // CAP AL
 
         // Create an agent
         addTestAgent();
